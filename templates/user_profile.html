@@ -1,0 +1,73 @@
+{% extends 'main.html' %} {%load static%} {% block body%}
+
+<div class="py-4 mt-auto text-black">
+  <div class="container-fluid">
+    <div class="row justify-content-center">
+      <div class="col-xl-12">
+        <div class="row">
+          <div class="col-md-6 mt-4">
+            <div class="card mb-3 text-black">
+              <div class="card-header bg-success">
+                <h4>
+                  <b>Hi,</b>
+                  <strong>{{ user.first_name }} {{ user.last_name}} </strong>!
+                </h4>
+              </div>
+
+              <div class="card-body bg-light">
+                <div class="d-flex w-100 justify-content-between">
+                  <p class="mb-1">
+                    <b>Employee No:</b>
+                    <i>{{ user.profile.emp_no }}</i>
+                  </p>
+                </div>
+
+                <div class="d-flex w-100 justify-content-between">
+                  <p class="mb-1">
+                    <b>Username:</b> <i>{{ user.username }}</i>
+                  </p>
+                </div>
+
+                <div class="d-flex w-100 justify-content-between">
+                  <p class="mb-1">
+                    <b> First Name:</b> <i>{{ user.first_name }}</i>
+                  </p>
+                </div>
+
+                <div class="d-flex w-100 justify-content-between">
+                  <p class="mb-1">
+                    <b> Last Name:</b> <i>{{ user.last_name }}</i>
+                  </p>
+                </div>
+
+                <div class="d-flex w-100 justify-content-between">
+                  <p class="mb-1"><b> Email:</b> <i>{{ user.email }}</i></p>
+                </div>
+
+                <div class="d-flex w-100 justify-content-between">
+                  <p class="mb-1">
+                    <b> Date joined:</b> <i>{{ user.date_joined }}</i>
+                  </p>
+                </div>
+
+                <div class="d-flex w-100 justify-content-between">
+                  <p class="mb-1">
+                    <b> Last login:</b> <i>{{ user.last_login }}</i>
+                  </p>
+                </div>
+                <div class="d-flex w-100 justify-content-between">
+                  <p class="mb-1">
+                    <b> User Profile Image</b> <i></i>
+                    <img src="{{user.photo.url}}" />
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock body%}

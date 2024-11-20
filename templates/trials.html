@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Welcome</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin: 0;
+        padding: 0;
+        background-image: url("/static/img/a8.jpg");
+        background-size: cover; /* Make sure the image covers the entire background */
+        background-position: center; /* Center the background image */
+        background-repeat: no-repeat;
+      }
+      .container {
+        margin: 20px auto;
+        max-width: 600px;
+      }
+      .profile-image {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+      .home-link {
+        display: block;
+        margin-top: 20px;
+        text-decoration: none;
+        color: #333;
+        font-weight: bold;
+        border: 1px solid #333;
+        padding: 10px 20px;
+        border-radius: 5px;
+      }
+      .description {
+        margin-top: 20px;
+        font-size: 1.1em;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Display username if logged in -->
+      {% if request.user.is_authenticated %}
+      <h1>Welcome, {{ request.user.username }}!</h1>
+      <!-- Show user profile image if available -->
+      {% if request.user.face_image %}
+      <img
+        src="{{ request.user.face_image.url }}"
+        alt="Profile Image"
+        class="profile-image"
+      />
+      {% endif %}
+      <p class="description">
+        Thank you for logging in! We truly appreciate your trust and are
+        delighted to have you back in our system. <br />
+        If there’s anything we can assist you with, please don’t hesitate to
+        reach out.<br />
+        We hope you have a great experience using our platform!
+      </p>
+      {% else %}
+      <h1>Welcome to Our Application</h1>
+      <p class="description">Please log in to access your account.</p>
+      {% endif %}
+
+      <!-- Home link -->
+      <a href="{% url 'index' %}" class="home-link">Home</a>
+    </div>
+  </body>
+</html>

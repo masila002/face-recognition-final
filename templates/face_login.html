@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Facial Recognition Login</title>
+    <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        background-image: url("/static/img/a7.jpg");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        margin: 0; /* Removes default body margin */
+        padding: 20px; /* Adds padding around the body */
+        height: 100vh; /* Ensures full viewport height */
+      }
+
+      h2 {
+        margin-bottom: 30px; /* Adds space below the heading */
+      }
+
+      video {
+        width: 500px; /* Increases video width */
+        height: 350px; /* Increases video height */
+        margin-bottom: 20px; /* Adds space below the video */
+      }
+
+      button {
+        margin: 20px 0; /* Adds space around the button */
+        padding: 10px 20px; /* Adds padding inside the button */
+      }
+
+      form {
+        margin-top: 20px; /* Adds space above the form */
+      }
+
+      p {
+        margin-bottom: 20px; /* Adds space below error message */
+      }
+    </style
+  </head>
+  <body>
+    <h2>Login with Facial Recognition</h2>
+
+    <!-- Display error message if exists -->
+    {% if error %}
+    <p style="color: red">{{ error }}</p>
+    {% endif %}
+
+    <video id="video" width="300" height="200" autoplay></video>
+    <button id="capture">Capture Image</button>
+    <canvas id="canvas" width="300" height="200" style="display: none"></canvas>
+
+    <form id="faceLoginForm" method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <input type="hidden" name="face_image" id="face_image" />
+      <button type="submit" style="display: none">Login</button>
+    </form>
+    <br />
+
+    <script>
+      // Access the camera
+      const video = document.getElementById("video");
+      const canvas = document.getElementById("canvas");
+      const faceImageInput = document.getElementById("face_image");
+
+      navigator.mediaDevices
+        .getUserMedia({ video: true })
+        .then((stream) => {
+          video.srcObject = stream;
+        })
+        .catch((err) => {
+          console.error("Error accessing the camera: ", err);
+        });
+
+      // Capture the image
+      document.getElementById("capture").addEventListener("click", () => {
+        const context = canvas.getContext("2d");
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const dataURL = canvas.toDataURL("image/png");
+
+        // Set the image data to the hidden input
+        faceImageInput.value = dataURL;
+
+        // Show the login button
+        document.querySelector('button[type="submit"]').click();
+      });
+    </script>
+  </body>
+</html>

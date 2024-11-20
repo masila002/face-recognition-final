@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Register</title>
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-image: url("/static/img/new.jpg");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        margin: 0;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+        min-height: 100vh; /* Ensure the body has at least the full viewport height */
+      }
+
+      .register-box {
+        background-color: rgba(255, 255, 255, 0.3);
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 400px; /* Keeps the form responsive */
+        text-align: center;
+        backdrop-filter: blur(1px);
+
+
+      }
+
+      h2 {
+        margin-bottom: 30px;
+        font-size: 24px;
+        color: #333;
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+      }
+
+      form input {
+        width: 80%;
+        padding: 10px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 40px;
+        transition; .5s ease;
+      }
+
+      form input:focus, form input:valid{
+        border-color:#0ef;
+      }
+
+      button {
+        width: 80%;
+        padding: 12px;
+        background-color: #0026ffff;
+        color: white;
+        border: none;
+        border-radius: 40px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+
+      button:hover {
+        background-color: #0056b3;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="register-box">
+      <h2>Register</h2>
+
+      <!-- Display general error message if exists -->
+      {% if error %}
+      <p style="color: red">{{ error }}</p>
+      {% endif %}
+
+      <!-- Display form-specific errors -->
+      {% if form.errors %}
+      <ul style="color: red">
+        {% for field, errors in form.errors.items %}
+        <li>{{ field }}: {{ errors|join:", " }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+
+      <form
+        method="POST"
+        enctype="multipart/form-data"
+        onsubmit="return validateFaceImage()"
+      >
+        {% csrf_token %}
+
+        <div class="form-group">
+          {{ form.username.label_tag }} {{ form.username }}
+        </div>
+
+        <div class="form-group">
+          {{ form.email.label_tag }} {{ form.email }}
+        </div>
+
+        <div class="form-group">
+          <label for="face_image">Capture Face Image</label>
+          <video id="video" width="320" height="240" autoplay></video>
+          <button type="button" id="capture" class="btn btn-secondary">
+            Capture Image
+          </button>
+        </div>
+
+        <!-- Hidden input to store the base64 image -->
+        <input type="hidden" name="face_image" id="face_image" />
+
+        <div class="form-group">
+          {{ form.password1.label_tag }} {{ form.password1 }}
+        </div>
+
+        <div class="form-group">
+          {{ form.password2.label_tag }} {{ form.password2 }}
+        </div>
+
+        <button type="submit" class="btn btn-primary">Register</button>
+      </form>
+    </div>
+
+    <script>
+      const video = document.getElementById("video");
+      const captureButton = document.getElementById("capture");
+      const faceImageInput = document.getElementById("face_image");
+
+      // Access the camera and display the video stream
+      navigator.mediaDevices
+        .getUserMedia({ video: true })
+        .then((stream) => {
+          video.srcObject = stream;
+        })
+        .catch((err) => {
+          console.error("Error accessing the camera:", err);
+          alert(
+            "Unable to access your camera. Please check your device settings."
+          );
+        });
+
+      // Capture the image when button is clicked
+      captureButton.addEventListener("click", () => {
+        const canvas = document.createElement("canvas");
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        const context = canvas.getContext("2d");
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        // Convert the canvas to a base64-encoded image
+        const dataUrl = canvas.toDataURL("image/jpeg");
+        faceImageInput.value = dataUrl; // Set the hidden input to the base64 image
+
+        // Display the captured image as a preview (optional)
+        const previewImage = document.createElement("img");
+        previewImage.src = dataUrl;
+        document.body.appendChild(previewImage); // Or append to a specific div for preview
+
+        alert("Image captured successfully!");
+      });
+
+      // Validate face_image on form submission
+      function validateFaceImage() {
+        if (!faceImageInput.value) {
+          alert("Please capture an image before submitting.");
+          return false; // Prevent form submission
+        }
+        return true; // Allow form submission if face_image is set
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+      name="csrf-token"
+      content="{{ csrf_token }}"
+    />
+
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+    <!-- custom css -->
+    <link rel="stylesheet" href="{% static 'style.css' %}" />
+
+    <!--bootstap link-->
+    <!--link href="{%static 'css/bootstrap.min (1).css' %}" rel="stylesheet" /-->
+    <link href="/static/img/a4.jpg" rel="icon" />
+    <link rel="stylesheet" href="{%static 'img/style.css' %}" />
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+    {% block scripts %}{% endblock scripts %}
+
+    <title>Face login System</title>
+  </head>
+  <body class="d-flex flex-column min-vh-100 bg-white">
+    {% block content %} {% endblock content %}
+  </body>
+</html>

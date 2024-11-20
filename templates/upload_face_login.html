@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Face Login</title>
+  </head>
+  <body>
+    <h2>Face Login</h2>
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <label for="face_image">Upload a photo:</label>
+      <input type="file" name="face_image" required />
+      <button type="submit">Login</button>
+    </form>
+    {% if error %}
+    <p style="color: red">{{ error }}</p>
+    {% endif %}
+  </body>
+</html>

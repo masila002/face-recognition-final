@@ -1,0 +1,24 @@
+{% extends 'main.html' %} {%load static%} {% block body %}
+<div class="container mb-5">
+  <div class="row justify-content-center mt-5">
+    <div class="col-md-8 col-sm-12 offset-md-1 p-4 text-center">
+      <h1 class="text-light">
+        <b>{{ user.first_name }} {{ user.last_name }} has logged in today </b>
+      </h1>
+    </div>
+  </div>
+
+  <div class="row justify-content-center mt-1">
+    <div class="card col-md-5 col-sm-12 offset-md-1 p-4 text-center">
+      <h2 class="text-black">
+        <!--{% if request.user.is_authenticated %}-->
+        <b>Welcome {{ request.user.username }} </b>
+        <!--{% else %}
+        <b>Welcome </b>
+
+        {% endif %}-->
+      </h2>
+    </div>
+  </div>
+</div>
+{% endblock body %}

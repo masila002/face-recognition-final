@@ -1,0 +1,86 @@
+{% extends 'main.html' %} {% block body %}
+<h2>Attendance Records</h2>
+<form method="POST">
+  {% csrf_token %}
+  <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}" />
+</form>
+
+<!-- Real-time attendance table -->
+<table
+  id="attendance-table"
+  style="width: 100%; border-collapse: collapse; text-align: left"
+>
+  <thead>
+    <tr style="background-color: #f2f2f2">
+      <th style="padding: 10px; border-bottom: 1px solid #ddd">User</th>
+      <th style="padding: 10px; border-bottom: 1px solid #ddd">Action</th>
+      <th style="padding: 10px; border-bottom: 1px solid #ddd">Timestamp</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for record in records %}
+    <tr style="border-bottom: 1px solid #ddd">
+      <td style="padding: 10px">{{ record.user.username }}</td>
+      <td style="padding: 10px">{{ record.action }}</td>
+      <td style="padding: 10px">{{ record.timestamp }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<!-- Hidden CSRF token -->
+<meta name="csrf-token" content="{{ csrf_token }}" />
+
+<script>
+  // Function to get CSRF token
+  function getCSRFToken() {
+    return document
+      .querySelector('meta[name="csrf-token"]')
+      .getAttribute("content");
+  }
+
+  // Function to append a new record to the table
+  function addRecordToTable(user, action, timestamp) {
+    const table = document.querySelector("#attendance-table tbody");
+    const row = document.createElement("tr");
+    row.style.borderBottom = "1px solid #ddd";
+
+    row.innerHTML = `
+      <td style="padding: 10px">${user}</td>
+      <td style="padding: 10px">${action}</td>
+      <td style="padding: 10px">${timestamp}</td>
+    `;
+
+    table.prepend(row); // Add the new record at the top
+  }
+
+  // Function to handle face scan result
+  function handleFaceScan(faceImage) {
+    const csrfToken = getCSRFToken();
+
+    fetch("{% url 'face_scan' %}", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": csrfToken,
+      },
+      body: JSON.stringify({ face_image: faceImage }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          addRecordToTable(data.user, data.action, data.timestamp);
+        } else {
+          alert(data.error || "Face not recognized.");
+        }
+      })
+      .catch((error) => {
+        console.error("Error during face scan:", error);
+      });
+  }
+
+  // Simulate receiving face scan data (replace with actual face scan logic)
+  // Example usage:
+  // handleFaceScan("base64-image-data-here");
+</script>
+{% endblock body %}

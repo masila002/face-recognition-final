@@ -1,0 +1,151 @@
+{% extends 'main.html' %}
+{% load static%}
+
+{% block body%}
+<div class="container-fluid">
+    <h2 class="m-4 text-light text-center"><b>Employees Attendance</b></h2>
+
+    <!--Class Name input field -->
+    <!--<div class="row mb-3 print-show">
+        <div class="col-6">
+            <div class="input-group">
+                <span class="input-group-text">Class Name:</span>
+                <input type="text" id="record_name" class="form-control" placeholder="Enter the name of the record">
+            </div>
+        </div>
+    </div>-->
+
+    <!-- Search input fields for filtering records -->
+    <div class="row mb-3 print-hide">
+        <!-- Search by Registration Number -->
+        <div class="col-md-4 offset-md-8 mb-2">
+            <div class="input-group justify-content-end">
+                <span class="input-group-text">Search by Employee Number:</span>
+                <input type="number" id="search_emp_no" class="form-control" placeholder="">
+            </div>
+        </div>
+
+        <!-- Search by Username -->
+        <div class="col-md-4 offset-md-8">
+            <div class="input-group justify-content-end">
+                <span class="input-group-text">Search by Username:</span>
+                <input type="text" id="search_username" class="form-control" placeholder="">
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+
+            {% if users %}
+            <div class="card bg-light ">
+                <div class="card-header text-black">
+                    <i class="fa-solid fa-list fa-lg"></i> <b>Employees Records</b>
+                </div>
+                <div class="card-body">
+                   <!-- <table class="table">
+                        <tr>
+                            <th>Username</th>
+                            <th>Login Count</th>
+                        </tr>
+                        {% for count in count %}
+                        <tr>
+                            <td>{{count.user}}</td>
+                            <td>{{count.count}}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>-->
+                    <p class="card-text text-black">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Employees List</th>
+                                        <th scope="col">EmployeeNo</th>
+                                        <th scope="col">Username</th>
+                                        <th scope="col">First Name</th>
+                                        <th scope="col">Last Name</th>
+                                        <th scope="col">Email</th>
+                                        <th scope="col">Date Registered</th>
+                                        
+                                        
+                                        
+                                    </tr>
+                                </thead>
+                                <tbody id="employee_records">
+                                    {% for user in users %}
+                                    <tr class="table-success">
+                                        <td>{{ user.id }}</td>
+                                        <td>{{ user.profile.emp_no }}</td>
+                                        <td>{{ user.username }}</td>
+                                        <td>{{ user.first_name }}</td>
+                                        <td>{{ user.last_name }}</td>
+                                        <td>{{ user.email }}</td>
+                                        <td>{{ user.last_login }}</td>
+                                        <td></td>
+
+                                        <!--<td>
+
+                                            {% for history in login_histories %}
+                                                {% if history.user == user.username %}
+                                                    {{ history.count }}
+                                                {% endif %}
+                                            {% endfor %}
+                                        </td>-->
+                                        
+                                    </tr> 
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </p>
+                    <button onclick="window.print()" class="btn btn-primary print-hide">Print Records</button>
+                </div>
+            </div>
+            {% else %}
+            <h5 class="alert alert-primary ms-4 me-4">No Employees records</h5>
+            {% endif %}
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Function to filter records based on search input
+        function filterRecords() {
+            var searchEmpNo = $('#search_emp_no').val().toLowerCase();
+            var searchUsername = $('#search_username').val().toLowerCase();
+            $('#employee_records tr').hide();
+            $('#employee_records tr').each(function () {
+                var empNo = $(this).find('td:nth-child(2)').text().toLowerCase();
+                var username = $(this).find('td:nth-child(3)').text().toLowerCase();
+                if ((empNo.includes(searchEmpNo) || searchEmpNo === '') &&
+                    (username.includes(searchUsername) || searchUsername === '')) {
+                    $(this).show();
+                }
+            });
+        }
+
+        // Call filterRecords function when search input changes or Enter key is pressed
+        $('#search_emp_no, #search_username').on('input keypress', function (event) {
+            // If Enter key is pressed
+            if (event.type === 'keypress' && event.keyCode === 13) {
+                filterRecords();
+            } else {
+                // If input is changed but not Enter key, just filter records
+                filterRecords();
+            }
+        });
+    });
+</script>
+
+<style>
+    @media print {
+        .print-hide {
+            display: none;
+        }
+    }
+</style>
+
+{% endblock body %}
+
